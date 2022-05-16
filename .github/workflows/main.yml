@@ -12,12 +12,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Cache Chromium
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: chromium
+          key: ${{runner.OS}}-chromium-caches
+
       - uses: actions/checkout@v2
       - name: Run
-        env: 
+        env:
           from: ${{ secrets.FROM }}
           to: ${{ secrets.TO }}
           id: ${{ secrets.ID }}
           passcode: ${{ secrets.PASSWORD_CODE }}
         run: |
-          go run . -from=${{ secrets.FROM }} -to=${{ secrets.TO }} -id=${{ secrets.ID }} -passcode=${{ secrets.PASSWORD_CODE }}
+          go run .

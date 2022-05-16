@@ -9,6 +9,7 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/go-rod/rod"
+	"github.com/go-rod/rod/lib/launcher"
 	"github.com/go-rod/rod/lib/proto"
 	"github.com/jordan-wright/email"
 )
@@ -48,10 +49,9 @@ func regStringVar(p *string, name string, value string, usage string) {
 	}
 }
 
-var id, from, to, passcode, status, smtpAddress, smtpPort string
-
 func main() {
 	godotenv.Load()
+	launcher.DefaultBrowserDir = "./chromium"
 	page := rod.New().MustConnect().MustPage("")
 
 	router := page.HijackRequests()
@@ -70,6 +70,12 @@ func main() {
 	statusDOM := page.MustElement("#query_search_table div.col-sm-2.states")
 	text := statusDOM.MustText()
 	println("状态：", text)
+
+	status := os.Getenv("STATUS")
+	if status == "" {
+		status = "正在审批中"
+	}
+
 	if text != "" && text != status {
 		sendMail(text)
 	}
