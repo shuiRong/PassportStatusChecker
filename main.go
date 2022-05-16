@@ -50,15 +50,8 @@ func regStringVar(p *string, name string, value string, usage string) {
 
 var id, from, to, passcode, status, smtpAddress, smtpPort string
 
-func loadConfig() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
-
 func main() {
-	loadConfig()
+	godotenv.Load()
 	page := rod.New().MustConnect().MustPage("")
 
 	router := page.HijackRequests()
@@ -77,8 +70,7 @@ func main() {
 	statusDOM := page.MustElement("#query_search_table div.col-sm-2.states")
 	text := statusDOM.MustText()
 	println("状态：", text)
-	//  && text != status
-	if text != "" {
+	if text != "" && text != status {
 		sendMail(text)
 	}
 }
