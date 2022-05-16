@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  schedule:
+    - cron: '0 0 */1 * *'
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run
+        env: 
+          from: ${{ secrets.FROM }}
+          to: ${{ secrets.TO }}
+          id: ${{ secrets.ID }}
+          passcode: ${{ secrets.PASSWORD_CODE }}
+        run: |
+          go run . -from=${{ secrets.FROM }} -to=${{ secrets.TO }} -id=${{ secrets.ID }} -passcode=${{ secrets.PASSWORD_CODE }}
