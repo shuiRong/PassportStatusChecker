@@ -16,8 +16,8 @@ jobs:
         id: cache
         uses: actions/cache@v2
         with:
-          path: chromium
-          key: ${{runner.OS}}-chromium-caches
+          path: ./chromium/
+          key: chromium-caches
 
       - uses: actions/checkout@v2
       - name: Run
