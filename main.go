@@ -4,10 +4,7 @@ import (
 	"flag"
 	"log"
 	"net/smtp"
-	"os"
 	"time"
-
-	"github.com/joho/godotenv"
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
@@ -16,18 +13,8 @@ import (
 )
 
 func sendMail(content string) {
+	var _, from, to, passcode, smtpAddress, smtpPort, _ = loadConfig()
 	println("准备发送邮件...")
-	from := os.Getenv("FROM")
-	to := os.Getenv("TO")
-	passcode := os.Getenv("PASSWORD_CODE")
-	smtpAddress := os.Getenv("SMTP")
-	if smtpAddress == "" {
-		smtpAddress = "smtp.qq.com"
-	}
-	smtpPort := os.Getenv("SMTP_PORT")
-	if smtpPort == "" {
-		smtpPort = "25"
-	}
 
 	e := email.NewEmail()
 	//设置发送方的邮箱
@@ -44,14 +31,35 @@ func sendMail(content string) {
 	}
 }
 
-func regStringVar(p *string, name string, value string, usage string) {
-	if flag.Lookup(name) == nil {
-		flag.StringVar(p, name, value, usage)
+func loadConfig() (string, string, string, string, string, string, string) {
+	var id, from, to, passcode, smtpAddress, smtpPort, status string
+	flag.StringVar(&id, "id", "", "身份证")
+	flag.StringVar(&from, "from", "", "发送方邮箱")
+	flag.StringVar(&to, "to", "", "接收方邮箱")
+	flag.StringVar(&passcode, "passcode", "", "邮箱登录授权码/密码")
+	flag.StringVar(&smtpAddress, "smtp", "", "smtp服务，不带端口")
+	flag.StringVar(&smtpPort, "smtp-port", "", "smtp端口")
+	flag.StringVar(&status, "status", "", "用来做对比的状态字符")
+
+	flag.Parse()
+
+	if status == "" {
+		status = "正在审批中"
 	}
+	if smtpAddress == "" {
+		smtpAddress = "smtp.qq.com"
+	}
+	if smtpPort == "" {
+		smtpPort = "25"
+	}
+
+	println(id, from, to, passcode, smtpAddress, smtpPort, status)
+
+	return id, from, to, passcode, smtpAddress, smtpPort, status
 }
 
 func main() {
-	godotenv.Load()
+	var id, _, _, _, _, _, status = loadConfig()
 	launcher.DefaultBrowserDir = "./chromium"
 	page := rod.New().MustConnect().MustPage("")
 
@@ -67,8 +75,8 @@ func main() {
 	println(2)
 	page.Timeout(60 * time.Second).MustNavigate("https://crj.gdga.gd.gov.cn/gdfwzww/views/jdcx/jdcxjg.html").MustWaitLoad()
 	println(3)
-	page.Timeout(60 * time.Second).MustElement("#ZJHM").MustInput(os.Getenv("ID"))
-	println(4, os.Getenv("ID"), 44)
+	page.Timeout(60 * time.Second).MustElement("#ZJHM").MustInput(id)
+	println(4)
 	page.Timeout(60 * time.Second).MustElement("body div.gd-form-item.table-wsyymlpt button").MustClick()
 	println(5)
 	statusDOM := page.Timeout(60 * time.Second).MustElement("#query_search_table div.col-sm-2.states")
@@ -76,11 +84,6 @@ func main() {
 	text := statusDOM.Timeout(60 * time.Second).MustText()
 	println(7)
 	println("状态：", text)
-
-	status := os.Getenv("STATUS")
-	if status == "" {
-		status = "正在审批中"
-	}
 
 	if text != "" && text != status {
 		sendMail(text)

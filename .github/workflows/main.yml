@@ -21,10 +21,5 @@ jobs:
 
       - uses: actions/checkout@v2
       - name: Run
-        env:
-          from: ${{ secrets.FROM }}
-          to: ${{ secrets.TO }}
-          id: ${{ secrets.ID }}
-          passcode: ${{ secrets.PASSWORD_CODE }}
         run: |
-          go run . -from=${{ secrets.FROM }} -to=${{ secrets.TO }} -id=${{ secrets.ID }} -passcode=${{ secrets.PASSWORD_CODE }}
+          go run . -from=${{ secrets.FROM }} -to=${{ secrets.TO }} -id=${{ secrets.ID }} -passcode=${{ secrets.PASSWORD_CODE }} -smtp=${{secrets.SMTP}} -smtp-port=${{secrets.SMTP_PORT}} -status=${{secrets.STATUS}}
