@@ -22,8 +22,9 @@
 
   ![step](./preview/1.png)
 
-3. 一个小时后观察 Github Actions 是否成功执行。
+3. 修改 `.github/workflows/main.yml`，把 `# go run` 前面的注释符 `#` 删掉。(我已经不需要运行它，所以注释掉了。)
+4. 一个小时后观察 Github Actions 是否成功执行。
 
    ![step](./preview/2.png)
 
-4. 如果你觉得每小时查询一次频率太低，想每 10 分钟查询一次的话，可以在 fork 后，自行修改 `.github/workflows/main.yml` 里的 `cron` 配置。cron 的规则请自行 Google。但建议不要把频率调得太高，防止给网站造成太大压力，影响其他用户正常使用，每小时就够了其实。
+5. 如果你觉得每小时查询一次频率太低，想每 10 分钟查询一次的话，可以在 fork 后，自行修改 `.github/workflows/main.yml` 里的 `cron` 配置。cron 的规则请自行 Google。但建议不要把频率调得太高，防止给网站造成太大压力，影响其他用户正常使用，每小时就够了其实。
