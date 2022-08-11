@@ -1,25 +1,25 @@
-name: CI
+# name: CI
 
-on:
-  schedule:
-    - cron: '0 * * * *'
-  push:
-    branches:
-      - main
+# on:
+#   schedule:
+#     - cron: '0 * * * *'
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Cache Chromium
-        id: cache
-        uses: actions/cache@v2
-        with:
-          path: ./chromium/
-          key: chromium-caches
+#     steps:
+#       - name: Cache Chromium
+#         id: cache
+#         uses: actions/cache@v2
+#         with:
+#           path: ./chromium/
+#           key: chromium-caches
 
-      - uses: actions/checkout@v2
-      - name: Run
-        run: |
-          # go run . -from=${{ secrets.FROM }} -to=${{ secrets.TO }} -id=${{ secrets.ID }} -passcode=${{ secrets.PASSWORD_CODE }} -smtp=${{secrets.SMTP}} -smtp-port=${{secrets.SMTP_PORT}} -status=${{secrets.STATUS}}
+#       - uses: actions/checkout@v2
+#       - name: Run
+#         run: |
+#           # go run . -from=${{ secrets.FROM }} -to=${{ secrets.TO }} -id=${{ secrets.ID }} -passcode=${{ secrets.PASSWORD_CODE }} -smtp=${{secrets.SMTP}} -smtp-port=${{secrets.SMTP_PORT}} -status=${{secrets.STATUS}}
